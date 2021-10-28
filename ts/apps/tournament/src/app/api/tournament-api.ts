@@ -6,17 +6,16 @@ import { v4 as uuidv4 } from 'uuid';
 const tournamentRepository = new TournamentRepository();
 
 export const postTournament = (req: Request, res: Response) => {
-  const tournamentToAdd: TournamentToAdd = req.body;
+  const { name }: TournamentToAdd = req.body;
 
-  if (!tournamentToAdd.name) {
-    res.status(400);
+  if (!name) {
+    res.status(400).send("Le champ nom est manquant ou vide");
   }
 
-  const tournament = { id: uuidv4(), name: tournamentToAdd.name, phases: [], participants: [] };
+  const tournament = { id: uuidv4(), name, phases: [], participants: [] };
   tournamentRepository.saveTournament(tournament);
 
-  res.status(201);
-  res.send({ id: tournament.id });
+  res.status(201).send({ id: tournament.id });
 };
 
 export const getTournament = (req: Request, res: Response) => {
@@ -28,10 +27,15 @@ export const getTournament = (req: Request, res: Response) => {
   res.send(tournament);
 };
 
-
 export const postParticipant = (req: Request, res: Response) => {
+  // Get the id in the params
   const id = req.params['id'];
-  const participantToAdd: ParticipantToAdd = req.body;
+
+  // Get the participant to add in the request body
+  const { name, elo }: ParticipantToAdd = req.body;
+  if (!name || !elo || !Number.isInteger(elo)) {
+    res.status(400).send("Le nom ou l'elo sont incorrects");
+  }
 
   // Get the tournament
   const tournament = tournamentRepository.getTournament(id);
@@ -39,11 +43,7 @@ export const postParticipant = (req: Request, res: Response) => {
     res.status(404).send("Le tournoi n'existe pas");
   }
 
-  if (!participantToAdd.name || participantToAdd.elo) {
-    res.status(400);
-  }
-
-  const participant = { id: uuidv4(), name: participantToAdd.name, elo: participantToAdd.elo };
+  const participant = { id: uuidv4(), name, elo };
 
   res.status(201).send({ id: participant.id });
 };
