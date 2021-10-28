@@ -21,5 +21,10 @@ describe('/tournament endpoint', () => {
 
       expect(get.body.name).toEqual(exampleTournament.name);
     });
+
+    it('should return 400 when name is empty or missing', async () => {
+      request(app).post('/api/tournaments').send({ name: '' }).expect(400);
+      request(app).post(`/api/tournaments`).send({}).expect(400);
+    });
   });
 });
