@@ -45,5 +45,9 @@ export const postParticipant = (req: Request, res: Response) => {
 
   const participant = { id: uuidv4(), name, elo };
 
+  // Save tournament
+  tournament.participants.push(participant);
+  tournamentRepository.saveTournament(tournament);
+
   res.status(201).send({ id: participant.id });
 };
