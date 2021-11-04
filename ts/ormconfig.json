@@ -1,0 +1,9 @@
+{
+  "type": "mongodb",
+  "url": "mongodb+srv://admin:tournament-project@cluster0.giiqh.mongodb.net/test",
+  "port": 27017,
+  "entities": ["./apps/tournament/src/entity/*.*"],
+  "synchronize": true,
+  "logging": false,
+  "useUnifiedTopology": true
+}
